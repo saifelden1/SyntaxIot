@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal: High-Availability Smart AgriTech Mesh Network (SAMN)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: rgba(22, 30, 49, 0.7);
+            --border-color: rgba(75, 85, 99, 0.3);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-green: #10b981;
+            --accent-green-hover: #34d399;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --glass-blur: blur(12px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #022c22 0%, #0f172a 50%, #0b0f19 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Nav Tabs */
+        .tabs-container {
+            margin-top: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .tab-btn.active {
+            color: #ffffff;
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sub-navigation for Board Specifications */
+        .sub-tabs-container {
+            margin: 25px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .sub-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .sub-tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .sub-tab-btn.active {
+            color: var(--accent-green);
+        }
+
+        .sub-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .sub-tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .sub-tab-content.active {
+            display: block;
+        }
+
+        /* Card Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: var(--glass-blur);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--accent-green);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        /* Specifications List */
+        .spec-list {
+            margin: 15px 0;
+            background: rgba(17, 24, 39, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(75, 85, 99, 0.2);
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.1);
+            font-size: 0.95rem;
+        }
+
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+
+        .spec-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .spec-val {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Architecture Elements */
+        .arch-diagram {
+            width: 100%;
+            background: rgba(17, 24, 39, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Feature Lists */
+        ul.custom-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        ul.custom-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        ul.custom-list.alert-list li::before {
+            content: "⚠";
+            color: var(--accent-gold);
+        }
+
+        /* Tasks Lists for firmware tasks */
+        ul.task-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        ul.task-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        ul.task-list li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Component Table */
+        table.comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(17, 24, 39, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.comp-table th, table.comp-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.comp-table th {
+            background: rgba(17, 24, 39, 0.8);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        table.comp-table tr:hover {
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        table.comp-table td.available {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Interactive Calculator */
+        .calc-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .calc-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent-green);
+            outline: none;
+        }
+
+        .calc-results {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .result-item {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .result-item:not(:last-child) {
+            border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+        }
+
+        .result-val {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            font-family: 'Outfit', sans-serif;
+            margin-top: 5px;
+        }
+
+        .result-val.price {
+            color: var(--accent-gold);
+        }
+
+        /* Alerts and Badges */
+        .callout {
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 4px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+        }
+
+        .callout h4 {
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .pill-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .pill-tag.routing { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+        .pill-tag.sleepy { background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); }
+        .pill-tag.master { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="badge">Internship Project Proposal</div>
+            <h1>Smart AgriTech Mesh Network (SAMN)</h1>
+            <p>A High-Availability Hybrid Mesh & Edge Gateway designed for Egypt's smart greenhouse and poultry farm sectors. Proposed to Syntax-IoT Engineering Team.</p>
+        </header>
+
+        <!-- NAVIGATION TABS -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('concept')">Project Overview</button>
+                <button class="tab-btn" onclick="switchTab('architecture')">Architecture & Nodes</button>
+                <button class="tab-btn" onclick="switchTab('components')">Local BOM (Egypt)</button>
+                <button class="tab-btn" onclick="switchTab('feasibility')">Feasibility & Challenges</button>
+                <button class="tab-btn" onclick="switchTab('simulator')">Interactive Planner</button>
+            </div>
+        </div>
+
+        <!-- TAB 1: OVERVIEW -->
+        <div id="concept" class="tab-content active">
+            <div class="grid-2">
+                <div class="card">
+                    <h2>Executive Summary</h2>
+                    <p>In Egypt's agricultural settings—specifically poultry farms and greenhouses—stable wireless coverage is consistently hampered by dense crop canopies, structural metal framing, and remote locations with poor cellular signals.</p>
+                    <p>The **Smart AgriTech Mesh Network (SAMN)** is designed as an infrastructure-agnostic, low-cost solution. Using a local Layer 2 wireless mesh (ESP-NOW), the system gathers multi-zone telemetry, acts on it with local edge logic, and handles cellular backhaul outages without data loss.</p>
+                    <h3>Key Value Propositions</h3>
+                    <ul class="custom-list">
+                        <li><strong>Self-Healing Local Coverage:</strong> Overcomes physical obstructions without requiring expensive cabling.</li>
+                        <li><strong>Battery-Powered Longevity:</strong> Advanced power management allows child sensors to run up to 2 years on a single 18650 cell.</li>
+                        <li><strong>Zero Data Loss Pipeline:</strong> In-memory and flash storage buffers data locally when cellular backhaul fails.</li>
+                        <li><strong>Decoupled Edge Logic:</strong> Direct node-to-node actuation ensures active cooling or watering runs offline.</li>
+                    </ul>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <h3>Starter Topology (Proof of Concept)</h3>
+                    <p>To demonstrate the project feasibility, we will initiate a four-node network:</p>
+                    <div style="background: rgba(17, 24, 39, 0.5); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <ul class="custom-list">
+                            <li><strong>1x Master Node (Gateway):</strong> Cell-connected (GSM), coordinates mesh updates, stores offline buffers.</li>
+                            <li><strong>1x Actuator Node (Router):</strong> Mains-powered, triggers high-power equipment, routes signals.</li>
+                            <li><strong>2x Sensor Nodes (Sleepy Ends):</strong> Cyclic sleep, records air & soil conditions. Used to prove multi-hop relaying.</li>
+                        </ul>
+                    </div>
+                    <p style="margin-top: 20px; font-style: italic; font-size: 0.9rem;">This minimum configuration directly demonstrates routing around barriers, network collision handling, and edge loop feedback control.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: ARCHITECTURE & NODES -->
+        <div id="architecture" class="tab-content">
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>System Architecture</h2>
+                <p>The system operates on an offline-first hierarchy. If connection to the cloud or Syntax-IoT dashboard is lost, the local mesh operates autonomously.</p>
+                
+                <!-- SVG DIAGRAM -->
+                <div class="arch-diagram">
+                    <svg width="600" height="300" viewBox="0 0 600 300" style="max-width: 100%;">
+                        <!-- Connections -->
+                        <line x1="300" y1="60" x2="300" y2="150" stroke="#4b5563" stroke-width="2" stroke-dasharray="5,5"/>
+                        <line x1="300" y1="150" x2="150" y2="240" stroke="#10b981" stroke-width="3"/>
+                        <line x1="150" y1="240" x2="450" y2="240" stroke="#10b981" stroke-width="2" stroke-dasharray="3,3"/>
+                        <line x1="300" y1="150" x2="450" y2="240" stroke="#10b981" stroke-width="3"/>
+                        
+                        <!-- Cloud -->
+                        <rect x="220" y="20" width="160" height="40" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="300" y="45" fill="#ffffff" font-size="12" font-family="Outfit" text-anchor="middle">SYNTAX-IOT CLOUD</text>
+                        
+                        <!-- Gateway -->
+                        <rect x="220" y="130" width="160" height="50" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                        <text x="300" y="155" fill="#ffffff" font-size="12" font-family="Outfit" text-anchor="middle">MASTER (GATEWAY)</text>
+                        <text x="300" y="170" fill="#9ca3af" font-size="10" text-anchor="middle">ESP32 + SIM800L</text>
+                        
+                        <!-- Actuator Node -->
+                        <rect x="70" y="215" width="160" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="150" y="240" fill="#ffffff" font-size="12" font-family="Outfit" text-anchor="middle">ACTUATOR NODE</text>
+                        <text x="150" y="255" fill="#9ca3af" font-size="10" text-anchor="middle">Always-on Router</text>
+                        
+                        <!-- Sensor Node -->
+                        <rect x="370" y="215" width="160" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                        <text x="450" y="240" fill="#ffffff" font-size="12" font-family="Outfit" text-anchor="middle">SENSOR NODES</text>
+                        <text x="450" y="255" fill="#9ca3af" font-size="10" text-anchor="middle">Cyclic Sleeping Ends</text>
+
+                        <!-- Labels -->
+                        <text x="320" y="105" fill="#3b82f6" font-size="11" font-weight="600">Cellular Link</text>
+                        <text x="210" y="200" fill="#10b981" font-size="11" font-weight="600">ESP-NOW Mesh</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- SUB-TABS: SPECIFIC BOARD SPECIFICATIONS & firmware requirements -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h2>Board Specifications & Implementation Tasks</h2>
+                <p style="margin-bottom: 20px;">Select a node profile below to inspect the detailed hardware and firmware engineering specifications.</p>
+                
+                <div class="sub-tabs-container">
+                    <div class="sub-tabs">
+                        <button class="sub-tab-btn active" onclick="switchSubTab('spec-master')">Master Node (Gateway)</button>
+                        <button class="sub-tab-btn" onclick="switchSubTab('spec-actuator')">Actuator Node (Router)</button>
+                        <button class="sub-tab-btn" onclick="switchSubTab('spec-sensor')">Sensor Node (Sleepy End)</button>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 1: MASTER NODE SPECS -->
+                <div id="spec-master" class="sub-tab-content active">
+                    <div class="grid-2">
+                        <div>
+                            <h3>Hardware Specifications</h3>
+                            <div class="spec-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">Core Microcontroller:</span>
+                                    <span class="spec-val">ESP32-WROOM-32D (Dual-Core)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">System Voltage:</span>
+                                    <span class="spec-val">5.0V DC (Mains-powered adapter)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Primary Telemetry Backhaul:</span>
+                                    <span class="spec-val">SIM800L GSM/GPRS (2G) or A7670C (4G)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Local Flash Storage:</span>
+                                    <span class="spec-val">4MB onboard SPI Flash (using LittleFS partition)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Average Operating Current:</span>
+                                    <span class="spec-val">120mA (Idle) / up to 2A (GSM Transmit peaks)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">RF Connection Mod:</span>
+                                    <span class="spec-val">U.FL IPEX connector to RP-SMA High Gain Antenna</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Firmware Tasks (What needs to be done)</h3>
+                            <ul class="task-list">
+                                <li><strong>Configure FreeRTOS Multi-Tasking:</strong> Dedicate Core 0 to high-speed local ESP-NOW packet listening, and Core 1 to cellular communication (TinyGSM) and edge-logic calculations.</li>
+                                <li><strong>Implement Offline Data Buffering:</strong> If cellular registration fails or GPRS drops, parse incoming sensor packets and write them to a circular flash log file in LittleFS. Regularly poll network status and upload backlogged files chronologically using MQTT once connected.</li>
+                                <li><strong>Develop Edge Rules Engine:</strong> Write an asynchronous comparison module checking variables (e.g., if Temp > 32°C, prepare a direct command packet to Actuator Node 1 to trigger fans).</li>
+                                <li><strong>RTC Synchronizer:</strong> Query network time (NTP) over GPRS. Periodically broadcast a synchronization beacon to align local clocks on sleeping nodes, adjusting for drift.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 2: ACTUATOR NODE SPECS -->
+                <div id="spec-actuator" class="sub-tab-content">
+                    <div class="grid-2">
+                        <div>
+                            <h3>Hardware Specifications</h3>
+                            <div class="spec-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">Core Microcontroller:</span>
+                                    <span class="spec-val">ESP32-WROOM-32D (Dual-Core)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Input Power:</span>
+                                    <span class="spec-val">100-240V AC to 5V DC (HLK-PM01 board-mount)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Switching Elements:</span>
+                                    <span class="spec-val">5V Relay Board, Opto-isolated (Active Low)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Coil Power Isolation:</span>
+                                    <span class="spec-val">Optocoupler isolation to protect ESP32 GPIO rails</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Relay Load Spec:</span>
+                                    <span class="spec-val">10A @ 250V AC / 10A @ 30V DC</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Load Protection:</span>
+                                    <span class="spec-val">Parallel RC Snubber circuit against inductive loads</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Firmware Tasks (What needs to be done)</h3>
+                            <ul class="task-list">
+                                <li><strong>Configure Permanent Mesh Routing:</strong> Enable ESP-NOW in always-on mode. Register as a mesh router node to listen for, verify, and forward packets from distant sensor nodes.</li>
+                                <li><strong>Implement Action Watchdog:</strong> Listen for command packets from Master. If an "ON" command is received, start a hardware watchdog timer. If the master fails to communicate within a pre-defined window, force relays to a safe state (OFF).</li>
+                                <li><strong>Develop Local Override Logic:</strong> Program a lookup map in NVS (Non-Volatile Storage). If the Master goes offline, direct broadcasts from local Sensor Nodes showing dangerous levels should immediately trigger fan/heater relays.</li>
+                                <li><strong>Receive & Write OTA Blocks:</strong> Support block-wise OTA update receipt. Write incoming bytes to the passive OTA partition and verify md5/sha checksums before allowing a system reboot.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 3: SENSOR NODE SPECS -->
+                <div id="spec-sensor" class="sub-tab-content">
+                    <div class="grid-2">
+                        <div>
+                            <h3>Hardware Specifications</h3>
+                            <div class="spec-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">Core Microcontroller:</span>
+                                    <span class="spec-val">ESP32 (regulators/LEDs removed for ultra-low power)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Power Source:</span>
+                                    <span class="spec-val">18650 Li-Ion Cell (3.7V, 2500mAh)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Power Control Path:</span>
+                                    <span class="spec-val">AO3401 P-Channel MOSFET high-side load switch</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Deep Sleep Current:</span>
+                                    <span class="spec-val">&lt; 15µA (compared to 15mA in default dev boards)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Sensing Peripherals:</span>
+                                    <span class="spec-val">DHT22 (Digital Air), Capacitive Soil Probe v1.2 (Analog)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Charging Circuit:</span>
+                                    <span class="spec-val">TP4056 with built-in battery undervoltage protection</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Firmware Tasks (What needs to be done)</h3>
+                            <ul class="task-list">
+                                <li><strong>Program Deep Sleep Cycle:</strong> Put the ESP32 into deep sleep mode, waking up only via RTC timer (e.g., every 5 minutes). Ensure all unused GPIOs are pulled down to prevent leakage currents.</li>
+                                <li><strong>Design Warm-up & Sampling sequence:</strong>
+                                    1. Drive MOSFET GPIO low to connect VCC to the external sensors.<br>
+                                    2. Execute a non-blocking delay of 500ms for sensor circuits to stabilize.<br>
+                                    3. Take ADC samples of soil moisture and read DHT22 data.<br>
+                                    4. Pull MOSFET GPIO high to completely cut sensor VCC, preventing probe corrosion and idle battery drain.</li>
+                                <li><strong>Implement Efficient Transmission:</strong> Package variables into a packed struct payload (saving bytes). Send via ESP-NOW, wait for ACK (up to 100ms), and immediately re-enter deep sleep.</li>
+                                <li><strong>Periodic OTA Check:</strong> Check the header of the Master's ACK packet. If an "OTA Update Pending" flag is high, keep the radio on to download the binary.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Original high-level cards showing node overview remains below -->
+            <div class="grid-3">
+                <!-- Master Node Summary -->
+                <div class="card">
+                    <h3>Master Node Summary <span class="pill-tag master">Master</span></h3>
+                    <p>Acts as the system orchestrator and cloud boundary interface, running GPRS and LittleFS storage pipelines.</p>
+                </div>
+                <!-- Actuator Node Summary -->
+                <div class="card">
+                    <h3>Actuator Node Summary <span class="pill-tag routing">Router</span></h3>
+                    <p>Always-on mains-powered node serving as a permanent mesh repeater and opto-isolated relay actuator.</p>
+                </div>
+                <!-- Sensor Node Summary -->
+                <div class="card">
+                    <h3>Sensor Node Summary <span class="pill-tag sleepy">Sleepy End</span></h3>
+                    <p>Battery-powered node optimized for ultra-low power consumption using MOSFET-isolated load switches.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: COMPONENTS -->
+        <div id="components" class="tab-content">
+            <div class="card">
+                <h2>Local Bill of Materials (BOM) - Egypt Sourced</h2>
+                <p>All specified items are readily available from stores such as RAM Electronics, Future Electronics, or components suppliers in downtown Cairo/Bab El-Louq.</p>
+                
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Part Description</th>
+                            <th>Local Specs & Package</th>
+                            <th>Est. Unit Cost</th>
+                            <th>Role in Project</th>
+                            <th>Availability in Egypt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ESP32 DevKit V1</strong></td>
+                            <td>ESP-WROOM-32, Micro-USB</td>
+                            <td>400 EGP</td>
+                            <td>Core Processor for all Nodes</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DHT22 Sensor</strong></td>
+                            <td>AM2302 (Air Temp / Humidity)</td>
+                            <td>160 EGP</td>
+                            <td>Greenhouse / Coop Air Sensing</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Capacitive Moisture Sensor</strong></td>
+                            <td>V1.2 Analog Output</td>
+                            <td>90 EGP</td>
+                            <td>Soil moisture checking (corrosion free)</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DS18B20 Temp Probe</strong></td>
+                            <td>1-Wire Waterproof Probe</td>
+                            <td>110 EGP</td>
+                            <td>Soil/Water depth temperature probe</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5V Relay Board</strong></td>
+                            <td>1-Channel Opto-isolated</td>
+                            <td>75 EGP</td>
+                            <td>Actuating low/high power loads</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SIM800L Module</strong></td>
+                            <td>GSM/GPRS Board (with antenna)</td>
+                            <td>350 EGP</td>
+                            <td>Cellular gateway connection on Master</td>
+                            <td class="available">In Stock (Medium)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TP4056 Charger</strong></td>
+                            <td>With battery protection IC</td>
+                            <td>30 EGP</td>
+                            <td>Li-ion charging on sensor nodes</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MT3608 Boost Board</strong></td>
+                            <td>Mini step-up module</td>
+                            <td>40 EGP</td>
+                            <td>Upgrading 3.7V battery to stable 5V</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>18650 Li-Ion Cell</strong></td>
+                            <td>3.7V (2200 - 3000mAh)</td>
+                            <td>120 EGP</td>
+                            <td>Sensor node battery power source</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 4: FEASIBILITY & CHALLENGES -->
+        <div id="feasibility" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <h2>Engineering Feasibility</h2>
+                    <p>Designing this project within the scope of an internship is highly achievable, but demands careful embedded programming. Here is what is immediately feasible:</p>
+                    <ul class="custom-list">
+                        <li><strong>Firmware Framework:</strong> Developing on ESP-IDF or Arduino IDE with FreeRTOS simplifies multitasking. Using FreeRTOS queues allows clean division between sensor sampling and wireless transmission tasks.</li>
+                        <li><strong>Local Telemetry:</strong> Standard sensors (DHT22, capacitive probe, DS18B20) have well-tested drivers, making initial integration straightforward.</li>
+                        <li><strong>Offline Buffering:</strong> Writing a circular flash logger using LittleFS on the ESP32's onboard flash is robust and prevents write failures.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Key Technical Challenges</h2>
+                    <div class="callout">
+                        <h4>1. OTA Firmware Updates Over Mesh</h4>
+                        <p>Updating child nodes remotely is a key requirement, but transmitting a 1MB firmware binary over ESP-NOW mesh is highly prone to packet loss. We must implement block-wise transfers with negative acknowledgments (NACK) to request missing bytes and prevent node bricking.</p>
+                    </div>
+                    <div class="callout">
+                        <h4>2. Severe Egyptian Heat vs. Batteries</h4>
+                        <p>In greenhouses and metal poultry barns, temperatures in Egypt's summer can exceed 45°C. Standard Li-Ion batteries degrade rapidly or enter thermal runaway at these temperatures. We must design thermal protection circuits or switch to LiFePO4 cells which tolerate higher operational limits.</p>
+                    </div>
+                    <div class="callout" style="border-left-color: var(--accent-blue);">
+                        <h4 style="color: var(--accent-blue);">3. Signal Attenuation in High Moisture</h4>
+                        <p>Greenhouses packed with high-moisture foliage act as 2.4GHz RF dampeners. To counter this, physical antenna design (using external RP-SMA antennas instead of onboard PCB trace antennas) is mandatory for reliable mesh propagation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: SIMULATOR -->
+        <div id="simulator" class="tab-content">
+            <div class="card">
+                <h2>Interactive Node Planner & Budget Calculator</h2>
+                <p>Use this interactive tool to estimate child node battery life and calculate your total project budget in EGP based on node topologies.</p>
+                
+                <div class="calc-container" style="margin-top: 30px;">
+                    <!-- Input Form -->
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label for="battery-cap">Battery Capacity (mAh):</label>
+                            <input type="number" id="battery-cap" value="2500" min="1000" max="10000">
+                        </div>
+                        <div class="form-group">
+                            <label for="sleep-interval">Sensor Sleep Interval (Minutes):</label>
+                            <select id="sleep-interval" onchange="calculateBattery()">
+                                <option value="1">1 Minute</option>
+                                <option value="5" selected>5 Minutes</option>
+                                <option value="10">10 Minutes</option>
+                                <option value="30">30 Minutes</option>
+                                <option value="60">60 Minutes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sensor-count">Number of Sensor Nodes:</label>
+                            <input type="number" id="sensor-count" value="2" min="1" max="50" onchange="calculateCost()">
+                        </div>
+                        <div class="form-group">
+                            <label for="actuator-count">Number of Actuator Nodes:</label>
+                            <input type="number" id="actuator-count" value="1" min="1" max="10" onchange="calculateCost()">
+                        </div>
+                        <button class="tab-btn active" style="margin-top: 15px;" onclick="runCalculations()">Run Calculations</button>
+                    </div>
+
+                    <!-- Output Results -->
+                    <div class="calc-results">
+                        <div class="result-item">
+                            <label>Estimated Sensor Node Battery Life</label>
+                            <div class="result-val" id="battery-result">Calculating...</div>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">Based on 120mA active for 3s, 15uA sleep.</span>
+                        </div>
+                        <div class="result-item">
+                            <label>Estimated Project BOM Cost (Egypt)</label>
+                            <div class="result-val price" id="cost-result">Calculating...</div>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">Includes local sensor sets, power converters, and master cell module.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show current tab content and activate button
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if(tabId === 'simulator') {
+                runCalculations();
+            }
+        }
+
+        function switchSubTab(subTabId) {
+            // Hide all sub tab contents
+            const contents = document.querySelectorAll('.sub-tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Deactivate all sub tab buttons
+            const buttons = document.querySelectorAll('.sub-tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show current sub tab content and activate button
+            document.getElementById(subTabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function calculateBattery() {
+            const cap = parseFloat(document.getElementById('battery-cap').value);
+            const intervalMin = parseFloat(document.getElementById('sleep-interval').value);
+            
+            // Typical ESP32 + Sensor Profile:
+            // Active current: 120mA for 3 seconds (Boot, read sensors, transmit, wait for ACK)
+            // Sleep current: 0.015mA (15uA) for the remaining time
+            const activeTime = 3; // seconds
+            const sleepTime = (intervalMin * 60) - activeTime; // seconds
+            
+            const activeEnergy = 120 * activeTime; // mA-seconds
+            const sleepEnergy = 0.015 * sleepTime; // mA-seconds
+            const totalCycleTime = intervalMin * 60; // seconds
+            
+            const averageCurrent = (activeEnergy + sleepEnergy) / totalCycleTime; // mA
+            
+            const hours = cap / averageCurrent;
+            const days = hours / 24;
+            
+            let resultString = '';
+            if (days > 365) {
+                resultString = (days / 365).toFixed(1) + " Years";
+            } else {
+                resultString = Math.round(days) + " Days";
+            }
+            
+            document.getElementById('battery-result').innerText = resultString;
+        }
+
+        function calculateCost() {
+            const sensorsNum = parseInt(document.getElementById('sensor-count').value) || 0;
+            const actuatorsNum = parseInt(document.getElementById('actuator-count').value) || 0;
+
+            // Individual node component costs based on local BOM:
+            // Master/Gateway: ESP32 (400) + SIM800L (350) + power components (150) = 900 EGP
+            const masterCost = 900;
+            
+            // Sensor Node: ESP32 (400) + DHT22 (160) + Soil (90) + DS18B20 (110) + Battery (120) + TP4056 (30) + MT3608 (40) = 950 EGP
+            const sensorCost = 950;
+            
+            // Actuator Node: ESP32 (400) + 5V Relay (75) + power components (150) = 625 EGP
+            const actuatorCost = 625;
+
+            const total = masterCost + (sensorsNum * sensorCost) + (actuatorsNum * actuatorCost);
+            document.getElementById('cost-result').innerText = total.toLocaleString() + " EGP";
+        }
+
+        function runCalculations() {
+            calculateBattery();
+            calculateCost();
+        }
+
+        // Initialize calculations
+        window.onload = function() {
+            runCalculations();
+        };
+    </script>
+</body>
+</html>
