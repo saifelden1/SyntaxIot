@@ -1,0 +1,26 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/saif/Desktop/Syntaxiot/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+$(C_GOALS)	Makefile	/^$(C_GOALS):$/;"	t
+%	Makefile	/^%: %.c$/;"	t
+CC	Makefile	/^CC ?= gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS ?= -Wall -Wextra -O2$/;"	m
+C_GOALS	Makefile	/^C_GOALS := $(filter %.c,$(MAKECMDGOALS))$/;"	m
+FILE	Makefile	/^FILE ?= main.c$/;"	m
+Solution	Merge_sorted_array.cpp	/^class Solution {$/;"	c	file:
+TARGET	Makefile	/^TARGET := $(basename $(FILE))$/;"	m
+all	Makefile	/^all: app$/;"	t
+clean	Makefile	/^clean:$/;"	t
+main	Merge_sorted_array.cpp	/^int main() {$/;"	f	typeref:typename:int
+main	Remove_Element.cpp	/^int main() {$/;"	f	typeref:typename:int
+merge	Remove_Element.cpp	/^void merge(std::vector<int>& nums1, int m, std::vector<int>& nums2, int n) {$/;"	f	typeref:typename:void
+removeElement	Merge_sorted_array.cpp	/^    int removeElement(vector<int>& nums, int val) {$/;"	f	class:Solution	typeref:typename:int	file:
+run	Makefile	/^run: $(TARGET)$/;"	t
