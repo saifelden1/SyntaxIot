@@ -229,6 +229,7 @@
             backdrop-filter: var(--glass-blur);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: border-color 0.3s ease;
+            margin-bottom: 25px;
         }
 
         .card:hover {
@@ -498,6 +499,8 @@
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('concept')">Project Overview</button>
                 <button class="tab-btn" onclick="switchTab('architecture')">Architecture & Nodes</button>
+                <button class="tab-btn" onclick="switchTab('gateway-core')">Gateway Core (Master)</button>
+                <button class="tab-btn" onclick="switchTab('sensor-core')">Sensor Core (Sleepy)</button>
                 <button class="tab-btn" onclick="switchTab('components')">Local BOM (Egypt)</button>
                 <button class="tab-btn" onclick="switchTab('feasibility')">Feasibility & Challenges</button>
                 <button class="tab-btn" onclick="switchTab('simulator')">Interactive Planner</button>
@@ -577,7 +580,7 @@
 
             <!-- SUB-TABS: SPECIFIC BOARD SPECIFICATIONS & firmware requirements -->
             <div class="card" style="margin-bottom: 30px;">
-                <h2>Board Specifications & Implementation Tasks</h2>
+                <h2>Quick Board Overview</h2>
                 <p style="margin-bottom: 20px;">Select a node profile below to inspect the detailed hardware and firmware engineering specifications.</p>
                 
                 <div class="sub-tabs-container">
@@ -725,28 +728,304 @@
                 </div>
 
             </div>
+        </div>
 
-            <!-- Original high-level cards showing node overview remains below -->
-            <div class="grid-3">
-                <!-- Master Node Summary -->
+        <!-- TAB 3: GATEWAY CORE (STANDALONE MASTER BLUEPRINT) -->
+        <div id="gateway-core" class="tab-content">
+            <!-- Section Title -->
+            <div class="card">
+                <h2>Gateway Core (Master Node) Blueprint</h2>
+                <p>The Master Node serves as the nervous system coordinator and cloud boundary of the SAMN architecture. Designed to handle local operations offline, it buffers sensor readings and manages the network structure dynamically.</p>
+            </div>
+
+            <!-- Hardware Pinout & Architecture Blueprint -->
+            <div class="grid-2">
                 <div class="card">
-                    <h3>Master Node Summary <span class="pill-tag master">Master</span></h3>
-                    <p>Acts as the system orchestrator and cloud boundary interface, running GPRS and LittleFS storage pipelines.</p>
+                    <h3>Hardware Schematic & Connections</h3>
+                    <p>To ensure high current stability and clean RF signals, the following peripheral mapping and circuit design are enforced:</p>
+                    
+                    <div class="spec-list">
+                        <div class="spec-item">
+                            <span class="spec-label">ESP32 GPIO17 (TX2) &rarr; SIM Module:</span>
+                            <span class="spec-val">SIM800L / A7670C RX (Via Voltage Divider)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">ESP32 GPIO16 (RX2) &rarr; SIM Module:</span>
+                            <span class="spec-val">SIM800L / A7670C TX (Direct Connection)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">ESP32 GPIO4 (RST) &rarr; SIM Module:</span>
+                            <span class="spec-val">SIM800L / A7670C Reset pin (Low pulse trigger)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">I2C SSD1306 OLED (SDA/SCL):</span>
+                            <span class="spec-val">ESP32 GPIO21 (SDA) & GPIO22 (SCL)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Power Outage Detection:</span>
+                            <span class="spec-val">ADC pin GPIO34 connected to 5V line divider</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Cellular Power Rails:</span>
+                            <span class="spec-val">Buck converter output adjusted to 4.0V DC</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Power Filter Bank:</span>
+                            <span class="spec-val">1000µF Low-ESR Capacitor across cellular VCC/GND</span>
+                        </div>
+                    </div>
+                    <p style="font-style: italic; font-size: 0.9rem; margin-top: 15px;">Note: SIM800L utilizes a 2.8V CMOS logic level. Routing a 3.3V UART signal directly from the ESP32 TX line requires a simple 2:3 voltage divider to prevent module RX damage.</p>
                 </div>
-                <!-- Actuator Node Summary -->
+
+                <!-- Dual-Core Firmware Flow -->
                 <div class="card">
-                    <h3>Actuator Node Summary <span class="pill-tag routing">Router</span></h3>
-                    <p>Always-on mains-powered node serving as a permanent mesh repeater and opto-isolated relay actuator.</p>
+                    <h3>Dual-Core Firmware Task Division</h3>
+                    <p>The Master Node leverages the ESP32’s dual-core Xtensa processor running <strong>FreeRTOS</strong> to execute networking and radio tasks simultaneously:</p>
+                    
+                    <div style="background: rgba(17, 24, 39, 0.5); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-green); font-size: 1rem; margin-bottom: 10px;">CORE 0: Local Mesh Radio (ESP-NOW)</h4>
+                        <ul class="custom-list" style="margin-bottom: 20px;">
+                            <li>Initializes ESP-NOW protocol stack.</li>
+                            <li>Runs active RX listening loop to receive incoming sensor telemetry.</li>
+                            <li>Decrypts and validates packet signatures.</li>
+                            <li>Sends immediate hardware-level ACKs to sleepy child nodes.</li>
+                        </ul>
+
+                        <h4 style="color: var(--accent-blue); font-size: 1rem; margin-bottom: 10px;">CORE 1: Cloud Uplink & Local Decisions</h4>
+                        <ul class="custom-list">
+                            <li>Maintains MQTT client state over GPRS/LTE.</li>
+                            <li>Pushes queues to the Syntax-IoT database (when online).</li>
+                            <li>Manages the LittleFS data queue during offline states.</li>
+                            <li>Runs the local threshold rules logic (triggering actuators).</li>
+                        </ul>
+                    </div>
                 </div>
-                <!-- Sensor Node Summary -->
-                <div class="card">
-                    <h3>Sensor Node Summary <span class="pill-tag sleepy">Sleepy End</span></h3>
-                    <p>Battery-powered node optimized for ultra-low power consumption using MOSFET-isolated load switches.</p>
+            </div>
+
+            <!-- NEW SECTION: FREERTOS DETAILED TASKS FOR MASTER MCU -->
+            <div class="card">
+                <h2>Master MCU FreeRTOS Tasks & IPC Implementation Blueprint</h2>
+                <p style="margin-bottom: 20px;">To guarantee high system responsiveness, the firmware must partition its scheduler into discrete, prioritized FreeRTOS tasks. Communication between tasks on different cores is managed using thread-safe queues and mutexes.</p>
+                
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Task Handle Name</th>
+                            <th>Target Core</th>
+                            <th>Priority</th>
+                            <th>Stack Size</th>
+                            <th>Responsibility</th>
+                            <th>IPC Interface Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>vTaskMeshReceiver</code></td>
+                            <td>Core 0</td>
+                            <td>5 (High)</td>
+                            <td>4096 Bytes</td>
+                            <td>Wakes up instantly on ESP-NOW packet interrupt callbacks. Reads the packet data and parses it.</td>
+                            <td>Pushes to <code>xTelemetryQueue</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>vTaskMeshBroadcaster</code></td>
+                            <td>Core 0</td>
+                            <td>2 (Low)</td>
+                            <td>2048 Bytes</td>
+                            <td>Wakes up periodically (e.g. every 60s) to broadcast the RTC synchronization beacon to the mesh.</td>
+                            <td>Uses shared clock variable</td>
+                        </tr>
+                        <tr>
+                            <td><code>vTaskCloudUplink</code></td>
+                            <td>Core 1</td>
+                            <td>3 (Normal)</td>
+                            <td>8192 Bytes</td>
+                            <td>Pops telemetry from the queue. If cell GPRS is connected, uploads to cloud. If offline, stores to flash.</td>
+                            <td>Pulls from <code>xTelemetryQueue</code>, locks <code>xFlashMutex</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>vTaskRulesEngine</code></td>
+                            <td>Core 1</td>
+                            <td>4 (Normal-High)</td>
+                            <td>4096 Bytes</td>
+                            <td>Inspects sensor data in real-time. Sends direct command packets to routers if threshold levels are violated.</td>
+                            <td>Reads from <code>xTelemetryQueue</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>vTaskOfflineSync</code></td>
+                            <td>Core 1</td>
+                            <td>1 (Lowest)</td>
+                            <td>4096 Bytes</td>
+                            <td>Periodic check (e.g. every 10 min). If online, reads buffered data out of flash and uploads it.</td>
+                            <td>Locks <code>xFlashMutex</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>vTaskDiagnosticHMI</code></td>
+                            <td>Core 1</td>
+                            <td>1 (Lowest)</td>
+                            <td>3072 Bytes</td>
+                            <td>Executes every 500ms to update OLED stats and toggle diagnostic LED indicators.</td>
+                            <td>Global status flags</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="grid-2" style="margin-top: 25px;">
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-green); margin-bottom: 8px;">1. Telemetry Queue (<code>xTelemetryQueue</code>)</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary);">A thread-safe FreeRTOS queue holding up to 50 items. It acts as the pipeline between the Core 0 radio thread and the Core 1 application threads. This prevents packet drops even if the GPRS stack blocks Core 1 during a network socket negotiation.</p>
+                    </div>
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-blue); margin-bottom: 8px;">2. Flash Mutex (<code>xFlashMutex</code>)</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary);">A binary semaphore (mutex) protecting the LittleFS file system partition. Since the <code>vTaskCloudUplink</code> task (writing new logs when offline) and <code>vTaskOfflineSync</code> task (reading and deleting logs when online) run asynchronously, the mutex guarantees file descriptors do not get corrupted.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- High-Availability Features -->
+            <div class="card">
+                <h2>High-Availability & Crash Recovery Features</h2>
+                <div class="grid-3">
+                    <div class="callout">
+                        <h4>1. Anti-Lockup Hardware Watchdog</h4>
+                        <p>Cellular modules deployed in agricultural regions frequently freeze due to carrier tower switches. The ESP32 firmware monitors AT communication. If the module stops responding to `AT\r` pings for more than 30 seconds, the ESP32 pulls the hardware Reset line (GPIO4) low for 100ms, power-cycling the modem and resetting the connection.</p>
+                    </div>
+                    <div class="callout" style="border-left-color: var(--accent-blue);">
+                        <h4>2. Power Outage State-Save</h4>
+                        <p>Agricultural power grids in Egypt are prone to voltage drops. By placing a voltage divider from the mains 5V DC line into the ESP32 ADC (GPIO34), the processor constantly monitors input voltage. If it detects a drop below 4.5V, it immediately suspends non-essential tasks, writes remaining in-memory telemetry queues to the flash file system (LittleFS), and cleanly closes file system handles before power is fully lost.</p>
+                    </div>
+                    <div class="callout" style="border-left-color: var(--accent-green);">
+                        <h4>3. Self-Healing Routing Sync</h4>
+                        <p>If a router node (Actuator) fails, the master coordinates with sleeping child nodes to modify their static address routing. If they fail to receive an ACK from their primary router, they fall back to broadcasting their payload to find alternative paths to the Master.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: COMPONENTS -->
+        <!-- TAB 4: SENSOR CORE (STANDALONE SLEEPY NODE BLUEPRINT) -->
+        <div id="sensor-core" class="tab-content">
+            <div class="card">
+                <h2>Sensor Core (Sleepy Node) Blueprint</h2>
+                <p>The Sensor Node is optimized for ultra-low power consumption. By combining cyclic sleep modes with hardware power-gating circuitry, these nodes can run continuously in remote locations on a single Li-Ion cell without intervention.</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Power Gating Hardware -->
+                <div class="card">
+                    <h3>Power-Gating Circuit Design</h3>
+                    <p>Agricultural sensors (like capacitive probes and humidity sensors) continuously draw several milliamperes of idle current even when not sampling. Connecting them directly to the power rail would drain a battery within days.</p>
+                    
+                    <div style="background: rgba(17, 24, 39, 0.8); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); margin: 20px 0; text-align: center;">
+                        <!-- ASCII Schematic -->
+                        <pre style="font-family: monospace; font-size: 0.85rem; line-height: 1.3; color: var(--accent-green); text-align: left;">
+[Battery 3.7V] ───────┬───────────────────────────────┐
+                      │                               │
+                      ▼                               ▼
+                 [ESP32 VCC]                 [P-MOSFET Switch]
+                      │                       (Source) ─── (Drain) ──&gt; [Sensors VCC]
+                      ▼                                         │
+             [GPIO 12 (Control)] ───────────────────────────────┘
+                     (Gate)
+                        </pre>
+                    </div>
+
+                    <ul class="custom-list">
+                        <li><strong>P-MOSFET Specifications (Egypt Sourced):</strong>
+                            <ul>
+                                <li><strong>Option 1 (Prototyping): IRF9Z24N or IRF9540N</strong> (TO-220 Package). Extremely common in Cairo markets (20-30 EGP). Easy to solder and use on breadboards.</li>
+                                <li><strong>Option 2 (Production PCB): BSS84</strong> (SOT-23 SMD). Available at surface-mount component suppliers (5-10 EGP).</li>
+                                <li><strong>Threshold Voltage (Vgs):</strong> Must be between -1.0V and -2.5V (Logic level) to allow full switching from the ESP32's 3.3V GPIOs.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Gate Control:</strong> ESP32 Pin GPIO12 controls the MOSFET gate. A High state turns power OFF. A Low state turns power ON.</li>
+                        <li><strong>Quiescent Leakage:</strong> By shutting the P-MOSFET gate off during sleep, the total sensor current leakage is reduced to less than 1µA.</li>
+                    </ul>
+                </div>
+
+                <!-- Node Lifecycle -->
+                <div class="card">
+                    <h3>The 3-Second Active Loop Lifecycle</h3>
+                    <p>When the internal RTC timer fires, the node wakes up, runs a rapid sampling routine, transmits, and shuts down. The active phase is optimized to take less than 3 seconds:</p>
+                    
+                    <div class="spec-list">
+                        <div class="spec-item">
+                            <span class="spec-label">1. Boot & Assert Power (10ms):</span>
+                            <span class="spec-val">Wake from sleep. Pull GPIO12 Low to power on sensors via MOSFET.</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">2. Stabilization Delay (500ms):</span>
+                            <span class="spec-val">Wait for Capacitive Probe oscillator & DHT22 internals.</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">3. Analog/Digital Sampling (150ms):</span>
+                            <span class="spec-val">Read ADC (Soil Moisture) and Single-Bus Pulse (DHT22).</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">4. Gate Shutdown (1ms):</span>
+                            <span class="spec-val">Pull GPIO12 High, cutting sensor power. Stops soil electrolysis.</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">5. Payload Framing & TX (150ms):</span>
+                            <span class="spec-val">Pack data into 12-byte struct. Transmit via ESP-NOW.</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">6. ACK Check & Sleep (100ms):</span>
+                            <span class="spec-val">Verify Master response, then invoke `esp_deep_sleep_start()`.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Egyptian Sensors Sourcing & Details -->
+            <div class="card">
+                <h2>Egyptian Agriculture Sourced Sensing Suite</h2>
+                <p style="margin-bottom: 20px;">Designed around sensors that are abundant in the Egyptian electronics market, providing a compromise between cost and reliability.</p>
+                
+                <div class="grid-2">
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-green); margin-bottom: 8px;">Capacitive Soil Moisture Sensor v1.2</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;">Measures soil moisture through capacitive change rather than resistance. Resistance sensors rust quickly in Egyptian soil due to salt content. The capacitive probe uses high-frequency capacitance measurement to evaluate soil dielectric constant.</p>
+                        <ul class="custom-list" style="font-size: 0.9rem;">
+                            <li><strong>Local Sourcing:</strong> Available at RAM, Future Electronics, and online makerspaces.</li>
+                            <li><strong>Price:</strong> 90 - 120 EGP.</li>
+                            <li><strong>Calibration Task:</strong> Must map wet soil (approx 1.2V ADC reading) and bone-dry air (approx 3.0V ADC reading) into a linear 0-100% calibration curve stored in ESP32 flash.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-blue); margin-bottom: 8px;">DHT22 (AM2302) Air Temperature & Humidity</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;">A digital sensor that outputs temperature and humidity over a single-wire digital bus. Unlike the cheaper DHT11, the DHT22 can read sub-zero temperatures and humidity levels up to 100%, vital for humid Egyptian greenhouses.</p>
+                        <ul class="custom-list" style="font-size: 0.9rem;">
+                            <li><strong>Local Sourcing:</strong> Extremely common in Cairo electronics markets.</li>
+                            <li><strong>Price:</strong> 150 - 180 EGP.</li>
+                            <li><strong>Implementation Detail:</strong> Reads air variables using a dedicated bit-banging driver or RMT peripheral (ESP32 remote control unit) to precisely capture the 80µs pulse-width signals.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW SECTION: SCALABILITY AND MODULAR SENSORS -->
+            <div class="card">
+                <h2>Modular Scaling Paths (Future Enhancements)</h2>
+                <p style="margin-bottom: 20px;">To ensure the PoC remains manageable within the internship timeline, the sensor suite is kept minimal. However, the hardware bus topology is pre-engineered to support easy hot-plug expansions as the project scales:</p>
+                
+                <div class="grid-3">
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-gold); margin-bottom: 8px;">1. Ambient Light Expansion</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Add a **BH1750 I2C Light Sensor** (approx. 70 EGP) to measure Lux levels. This allows Syntax-IoT to automate agricultural shade nets and artificial grow lights inside commercial greenhouses.</p>
+                    </div>
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-blue); margin-bottom: 8px;">2. Multi-Zone Water Temperature</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Daisy-chain multiple waterproof **DS18B20 1-Wire sensors** (approx. 110 EGP each) on a single ESP32 digital pin to log water temperatures in fish breeding tanks or soil temperature at multiple depths.</p>
+                    </div>
+                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-green); margin-bottom: 8px;">3. Nutrient & Water Level Logging</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Integrate waterproof **AJ-SR04M Ultrasonic sensors** (approx. 180 EGP) for water reservoir level tracking, and analog **pH/EC probes** for aquaculture nutrient dosing automation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COMPONENTS -->
         <div id="components" class="tab-content">
             <div class="card">
                 <h2>Local Bill of Materials (BOM) - Egypt Sourced</h2>
@@ -831,7 +1110,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: FEASIBILITY & CHALLENGES -->
+        <!-- TAB 6: FEASIBILITY & CHALLENGES -->
         <div id="feasibility" class="tab-content">
             <div class="grid-2">
                 <div class="card">
@@ -862,7 +1141,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: SIMULATOR -->
+        <!-- TAB 7: SIMULATOR -->
         <div id="simulator" class="tab-content">
             <div class="card">
                 <h2>Interactive Node Planner & Budget Calculator</h2>
