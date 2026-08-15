@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposal: High-Availability Smart AgriTech Mesh Network (SAMN)</title>
+    <title>Proposal: High-Availability Smart AgriTech Mesh Network</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -490,7 +490,7 @@
         <!-- HEADER -->
         <header>
             <div class="badge">Internship Project Proposal</div>
-            <h1>Smart AgriTech Mesh Network (SAMN)</h1>
+            <h1>Smart AgriTech Mesh Network</h1>
             <p>A High-Availability Hybrid Mesh & Edge Gateway designed for Egypt's smart greenhouse and poultry farm sectors. Proposed to Syntax-IoT Engineering Team.</p>
         </header>
 
@@ -500,7 +500,7 @@
                 <button class="tab-btn active" onclick="switchTab('concept')">Project Overview</button>
                 <button class="tab-btn" onclick="switchTab('architecture')">Architecture & Nodes</button>
                 <button class="tab-btn" onclick="switchTab('gateway-core')">Gateway Core (Master)</button>
-                <button class="tab-btn" onclick="switchTab('sensor-core')">Sensor Core (Sleepy)</button>
+                <button class="tab-btn" onclick="switchTab('sensor-core')">Sensor Core (SHT31 / pH)</button>
                 <button class="tab-btn" onclick="switchTab('components')">Local BOM (Egypt)</button>
                 <button class="tab-btn" onclick="switchTab('feasibility')">Feasibility & Challenges</button>
                 <button class="tab-btn" onclick="switchTab('simulator')">Interactive Planner</button>
@@ -513,7 +513,7 @@
                 <div class="card">
                     <h2>Executive Summary</h2>
                     <p>In Egypt's agricultural settings—specifically poultry farms and greenhouses—stable wireless coverage is consistently hampered by dense crop canopies, structural metal framing, and remote locations with poor cellular signals.</p>
-                    <p>The **Smart AgriTech Mesh Network (SAMN)** is designed as an infrastructure-agnostic, low-cost solution. Using a local Layer 2 wireless mesh (ESP-NOW), the system gathers multi-zone telemetry, acts on it with local edge logic, and handles cellular backhaul outages without data loss.</p>
+                    <p>The **Smart AgriTech Mesh Network** is designed as an infrastructure-agnostic, low-cost solution. Using a local Layer 2 wireless mesh (ESP-NOW), the system gathers multi-zone telemetry, acts on it with local edge logic, and handles cellular backhaul outages without data loss.</p>
                     <h3>Key Value Propositions</h3>
                     <ul class="custom-list">
                         <li><strong>Self-Healing Local Coverage:</strong> Overcomes physical obstructions without requiring expensive cabling.</li>
@@ -527,9 +527,9 @@
                     <p>To demonstrate the project feasibility, we will initiate a four-node network:</p>
                     <div style="background: rgba(17, 24, 39, 0.5); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
                         <ul class="custom-list">
-                            <li><strong>1x Master Node (Gateway):</strong> Cell-connected (GSM), coordinates mesh updates, stores offline buffers.</li>
+                            <li><strong>1x Master Node (Gateway):</strong> Cell-connected (SIM800L), coordinates mesh updates, stores offline buffers.</li>
                             <li><strong>1x Actuator Node (Router):</strong> Mains-powered, triggers high-power equipment, routes signals.</li>
-                            <li><strong>2x Sensor Nodes (Sleepy Ends):</strong> Cyclic sleep, records air & soil conditions. Used to prove multi-hop relaying.</li>
+                            <li><strong>2x Sensor Nodes (SHT31 Nodes):</strong> Runs baseline climate monitoring (Temp & Hum), with optional pH input.</li>
                         </ul>
                     </div>
                     <p style="margin-top: 20px; font-style: italic; font-size: 0.9rem;">This minimum configuration directly demonstrates routing around barriers, network collision handling, and edge loop feedback control.</p>
@@ -569,7 +569,7 @@
                         <!-- Sensor Node -->
                         <rect x="370" y="215" width="160" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
                         <text x="450" y="240" fill="#ffffff" font-size="12" font-family="Outfit" text-anchor="middle">SENSOR NODES</text>
-                        <text x="450" y="255" fill="#9ca3af" font-size="10" text-anchor="middle">Cyclic Sleeping Ends</text>
+                        <text x="450" y="255" fill="#9ca3af" font-size="10" text-anchor="middle">SHT31 Base (Optional pH Expansion)</text>
 
                         <!-- Labels -->
                         <text x="320" y="105" fill="#3b82f6" font-size="11" font-weight="600">Cellular Link</text>
@@ -587,7 +587,7 @@
                     <div class="sub-tabs">
                         <button class="sub-tab-btn active" onclick="switchSubTab('spec-master')">Master Node (Gateway)</button>
                         <button class="sub-tab-btn" onclick="switchSubTab('spec-actuator')">Actuator Node (Router)</button>
-                        <button class="sub-tab-btn" onclick="switchSubTab('spec-sensor')">Sensor Node (Sleepy End)</button>
+                        <button class="sub-tab-btn" onclick="switchSubTab('spec-sensor')">Sensor Node (SHT31 / pH)</button>
                     </div>
                 </div>
 
@@ -607,7 +607,7 @@
                                 </div>
                                 <div class="spec-item">
                                     <span class="spec-label">Primary Telemetry Backhaul:</span>
-                                    <span class="spec-val">SIM800L GSM/GPRS (2G) or A7670C (4G)</span>
+                                    <span class="spec-val">SIM800L GSM/GPRS (2G Only)</span>
                                 </div>
                                 <div class="spec-item">
                                     <span class="spec-label">Local Flash Storage:</span>
@@ -687,41 +687,36 @@
                             <div class="spec-list">
                                 <div class="spec-item">
                                     <span class="spec-label">Core Microcontroller:</span>
-                                    <span class="spec-val">ESP32 (regulators/LEDs removed for ultra-low power)</span>
+                                    <span class="spec-val">ESP32 (Optimized for deep sleep)</span>
                                 </div>
                                 <div class="spec-item">
                                     <span class="spec-label">Power Source:</span>
-                                    <span class="spec-val">18650 Li-Ion Cell (3.7V, 2500mAh)</span>
+                                    <span class="spec-val">18650 Battery (Base) / 5V DC Adapter (with pH)</span>
                                 </div>
                                 <div class="spec-item">
-                                    <span class="spec-label">Power Control Path:</span>
-                                    <span class="spec-val">AO3401 P-Channel MOSFET high-side load switch</span>
+                                    <span class="spec-label">Baseline Digital Bus (I2C):</span>
+                                    <span class="spec-val">GPIO21 (SDA) / GPIO22 (SCL) for SHT31-D</span>
                                 </div>
                                 <div class="spec-item">
-                                    <span class="spec-label">Deep Sleep Current:</span>
-                                    <span class="spec-val">&lt; 15µA (compared to 15mA in default dev boards)</span>
+                                    <span class="spec-label">Optional pH Input (ADC):</span>
+                                    <span class="spec-val">Analog Pin GPIO32 (Via 10k/20k Divider)</span>
                                 </div>
                                 <div class="spec-item">
-                                    <span class="spec-label">Sensing Peripherals:</span>
-                                    <span class="spec-val">DHT22 (Digital Air), Capacitive Soil Probe v1.2 (Analog)</span>
+                                    <span class="spec-label">Optional Temp Input (1-Wire):</span>
+                                    <span class="spec-val">Digital Pin GPIO15 for DS18B20 calibration probe</span>
                                 </div>
                                 <div class="spec-item">
-                                    <span class="spec-label">Charging Circuit:</span>
-                                    <span class="spec-val">TP4056 with built-in battery undervoltage protection</span>
+                                    <span class="spec-label">Average Sleep Draw:</span>
+                                    <span class="spec-val">&lt; 15µA (In SHT31-only deep sleep mode)</span>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <h3>Firmware Tasks (What needs to be done)</h3>
                             <ul class="task-list">
-                                <li><strong>Program Deep Sleep Cycle:</strong> Put the ESP32 into deep sleep mode, waking up only via RTC timer (e.g., every 5 minutes). Ensure all unused GPIOs are pulled down to prevent leakage currents.</li>
-                                <li><strong>Design Warm-up & Sampling sequence:</strong>
-                                    1. Drive MOSFET GPIO low to connect VCC to the external sensors.<br>
-                                    2. Execute a non-blocking delay of 500ms for sensor circuits to stabilize.<br>
-                                    3. Take ADC samples of soil moisture and read DHT22 data.<br>
-                                    4. Pull MOSFET GPIO high to completely cut sensor VCC, preventing probe corrosion and idle battery drain.</li>
-                                <li><strong>Implement Efficient Transmission:</strong> Package variables into a packed struct payload (saving bytes). Send via ESP-NOW, wait for ACK (up to 100ms), and immediately re-enter deep sleep.</li>
-                                <li><strong>Periodic OTA Check:</strong> Check the header of the Master's ACK packet. If an "OTA Update Pending" flag is high, keep the radio on to download the binary.</li>
+                                <li><strong>Read SHT31-D Climate:</strong> Wake from sleep, query temp and humidity over I2C, verify CRC registers, and prepare the core data packet.</li>
+                                <li><strong>(Optional) Read pH Sensor:</strong> If pH flag is enabled in the configuration, enable analog power path, sample ADC GPIO32, read the water temperature from DS18B20 over 1-Wire, and calculate compensated pH.</li>
+                                <li><strong>Transmit & Sleep:</strong> Send formatted sensor packet via ESP-NOW to Master, await ACK (timeout 100ms), shut down peripheral power-gates, and enter cyclic deep sleep.</li>
                             </ul>
                         </div>
                     </div>
@@ -735,7 +730,7 @@
             <!-- Section Title -->
             <div class="card">
                 <h2>Gateway Core (Master Node) Blueprint</h2>
-                <p>The Master Node serves as the nervous system coordinator and cloud boundary of the SAMN architecture. Designed to handle local operations offline, it buffers sensor readings and manages the network structure dynamically.</p>
+                <p>The Master Node serves as the nervous system coordinator and cloud boundary of this network architecture. Designed to handle local operations offline, it buffers sensor readings and manages the network structure dynamically.</p>
             </div>
 
             <!-- Hardware Pinout & Architecture Blueprint -->
@@ -746,16 +741,16 @@
                     
                     <div class="spec-list">
                         <div class="spec-item">
-                            <span class="spec-label">ESP32 GPIO17 (TX2) &rarr; SIM Module:</span>
-                            <span class="spec-val">SIM800L / A7670C RX (Via Voltage Divider)</span>
+                            <span class="spec-label">ESP32 GPIO17 (TX2) &rarr; SIM800L:</span>
+                            <span class="spec-val">SIM800L RX (Via Resistor Divider: 10k & 20k)</span>
                         </div>
                         <div class="spec-item">
-                            <span class="spec-label">ESP32 GPIO16 (RX2) &rarr; SIM Module:</span>
-                            <span class="spec-val">SIM800L / A7670C TX (Direct Connection)</span>
+                            <span class="spec-label">ESP32 GPIO16 (RX2) &rarr; SIM800L:</span>
+                            <span class="spec-val">SIM800L TX (Direct Connection)</span>
                         </div>
                         <div class="spec-item">
-                            <span class="spec-label">ESP32 GPIO4 (RST) &rarr; SIM Module:</span>
-                            <span class="spec-val">SIM800L / A7670C Reset pin (Low pulse trigger)</span>
+                            <span class="spec-label">ESP32 GPIO4 (RST) &rarr; SIM800L:</span>
+                            <span class="spec-val">SIM800L Reset pin (Hard power reset control)</span>
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">I2C SSD1306 OLED (SDA/SCL):</span>
@@ -766,15 +761,15 @@
                             <span class="spec-val">ADC pin GPIO34 connected to 5V line divider</span>
                         </div>
                         <div class="spec-item">
-                            <span class="spec-label">Cellular Power Rails:</span>
-                            <span class="spec-val">Buck converter output adjusted to 4.0V DC</span>
+                            <span class="spec-label">GSM Voltage Regulator (LM2596):</span>
+                            <span class="spec-val">Voltage output tuned to exactly 4.0V DC (Vcc input to module)</span>
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Power Filter Bank:</span>
-                            <span class="spec-val">1000µF Low-ESR Capacitor across cellular VCC/GND</span>
+                            <span class="spec-val">1000µF Low-ESR Capacitor across SIM800L VCC/GND</span>
                         </div>
                     </div>
-                    <p style="font-style: italic; font-size: 0.9rem; margin-top: 15px;">Note: SIM800L utilizes a 2.8V CMOS logic level. Routing a 3.3V UART signal directly from the ESP32 TX line requires a simple 2:3 voltage divider to prevent module RX damage.</p>
+                    <p style="font-style: italic; font-size: 0.9rem; margin-top: 15px;">Note: The SIM800L utilizes a 2.8V CMOS logic level. Routing a 3.3V UART signal directly from the ESP32 TX line requires a simple 2:3 voltage divider to prevent module RX damage.</p>
                 </div>
 
                 <!-- Dual-Core Firmware Flow -->
@@ -793,7 +788,7 @@
 
                         <h4 style="color: var(--accent-blue); font-size: 1rem; margin-bottom: 10px;">CORE 1: Cloud Uplink & Local Decisions</h4>
                         <ul class="custom-list">
-                            <li>Maintains MQTT client state over GPRS/LTE.</li>
+                            <li>Maintains MQTT client state over SIM800L GPRS.</li>
                             <li>Pushes queues to the Syntax-IoT database (when online).</li>
                             <li>Manages the LittleFS data queue during offline states.</li>
                             <li>Runs the local threshold rules logic (triggering actuators).</li>
@@ -840,7 +835,7 @@
                             <td>Core 1</td>
                             <td>3 (Normal)</td>
                             <td>8192 Bytes</td>
-                            <td>Pops telemetry from the queue. If cell GPRS is connected, uploads to cloud. If offline, stores to flash.</td>
+                            <td>Pops telemetry from the queue. If GPRS is connected, uploads to cloud. If offline, stores to flash.</td>
                             <td>Pulls from <code>xTelemetryQueue</code>, locks <code>xFlashMutex</code></td>
                         </tr>
                         <tr>
@@ -887,8 +882,8 @@
                 <h2>High-Availability & Crash Recovery Features</h2>
                 <div class="grid-3">
                     <div class="callout">
-                        <h4>1. Anti-Lockup Hardware Watchdog</h4>
-                        <p>Cellular modules deployed in agricultural regions frequently freeze due to carrier tower switches. The ESP32 firmware monitors AT communication. If the module stops responding to `AT\r` pings for more than 30 seconds, the ESP32 pulls the hardware Reset line (GPIO4) low for 100ms, power-cycling the modem and resetting the connection.</p>
+                        <h4>1. Anti-Lockup SIM800L Watchdog</h4>
+                        <p>SIM800L cellular modules frequently hang due to network carrier drops on 2G. The ESP32 firmware monitors AT command pings. If the module stops responding to `AT\r` pings for more than 30 seconds, the ESP32 pulls the SIM800L Reset line (GPIO4) low for 100ms, performing a hard reset of the cellular connection.</p>
                     </div>
                     <div class="callout" style="border-left-color: var(--accent-blue);">
                         <h4>2. Power Outage State-Save</h4>
@@ -902,126 +897,98 @@
             </div>
         </div>
 
-        <!-- TAB 4: SENSOR CORE (STANDALONE SLEEPY NODE BLUEPRINT) -->
+        <!-- TAB 4: SENSOR CORE (STANDALONE SHT31 / pH BLUEPRINT) -->
         <div id="sensor-core" class="tab-content">
             <div class="card">
-                <h2>Sensor Core (Sleepy Node) Blueprint</h2>
-                <p>The Sensor Node is optimized for ultra-low power consumption. By combining cyclic sleep modes with hardware power-gating circuitry, these nodes can run continuously in remote locations on a single Li-Ion cell without intervention.</p>
+                <h2>Sensor Core (SHT31 / pH Node) Blueprint</h2>
+                <p>To optimize for low power and high reliability, the sensor node defaults to an <strong>SHT31-only climate monitor</strong>. For water quality tracking in hydroponics or fish farms, the board includes a modular, optional **pH sensing expansion kit**.</p>
             </div>
 
             <div class="grid-2">
-                <!-- Power Gating Hardware -->
+                <!-- SHT31 Baseline Configuration -->
                 <div class="card">
-                    <h3>Power-Gating Circuit Design</h3>
-                    <p>Agricultural sensors (like capacitive probes and humidity sensors) continuously draw several milliamperes of idle current even when not sampling. Connecting them directly to the power rail would drain a battery within days.</p>
+                    <h3>Base Configuration: SHT31-D (Climate)</h3>
+                    <p>The baseline configuration is designed for maximum power efficiency using the I2C SHT31-D sensor to monitor ambient temperature and relative humidity:</p>
                     
-                    <div style="background: rgba(17, 24, 39, 0.8); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); margin: 20px 0; text-align: center;">
-                        <!-- ASCII Schematic -->
-                        <pre style="font-family: monospace; font-size: 0.85rem; line-height: 1.3; color: var(--accent-green); text-align: left;">
-[Battery 3.7V] ───────┬───────────────────────────────┐
-                      │                               │
-                      ▼                               ▼
-                 [ESP32 VCC]                 [P-MOSFET Switch]
-                      │                       (Source) ─── (Drain) ──&gt; [Sensors VCC]
-                      ▼                                         │
-             [GPIO 12 (Control)] ───────────────────────────────┘
-                     (Gate)
+                    <div class="spec-list">
+                        <div class="spec-item">
+                            <span class="spec-label">I2C Pins:</span>
+                            <span class="spec-val">ESP32 GPIO21 (SDA) / GPIO22 (SCL)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Deep Sleep Draw:</span>
+                            <span class="spec-val">&lt; 15µA (Targets 2-year battery life)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Active Sampling Time:</span>
+                            <span class="spec-val">&lt; 1.5 seconds (Wakes, reads I2C, transmits, sleeps)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Protection Mode:</span>
+                            <span class="spec-val">Internal heater dries condensation in greenhouses</span>
+                        </div>
+                    </div>
+                    <p style="font-style: italic; font-size: 0.9rem; margin-top: 15px; color: var(--text-secondary);">By keeping the base node SHT31-only, we avoid high power-gating currents and can power the board using a standard 18650 Li-Ion cell and a small solar panel.</p>
+                </div>
+
+                <!-- Optional pH Probe Integration -->
+                <div class="card">
+                    <h3>Optional Expansion: Analog pH Kit</h3>
+                    <p>For hydroponics or aquaculture monitoring, the node can be populated with a **pH-4502C probe** and a **DS18B20 sensor** for temperature compensation:</p>
+                    
+                    <div style="background: rgba(17, 24, 39, 0.8); border-radius: 12px; padding: 15px; border: 1px solid var(--border-color); margin: 15px 0;">
+                        <pre style="font-family: monospace; font-size: 0.8rem; line-height: 1.2; color: var(--accent-green); text-align: left;">
+[pH Sensor Board (5V)] ─── [10k Ohm] ──┬──&gt; ESP32 ADC (GPIO32)
+                                       │
+                                   [20k Ohm] ──&gt; GND
                         </pre>
                     </div>
 
                     <ul class="custom-list">
-                        <li><strong>P-MOSFET Specifications (Egypt Sourced):</strong>
-                            <ul>
-                                <li><strong>Option 1 (Prototyping): IRF9Z24N or IRF9540N</strong> (TO-220 Package). Extremely common in Cairo markets (20-30 EGP). Easy to solder and use on breadboards.</li>
-                                <li><strong>Option 2 (Production PCB): BSS84</strong> (SOT-23 SMD). Available at surface-mount component suppliers (5-10 EGP).</li>
-                                <li><strong>Threshold Voltage (Vgs):</strong> Must be between -1.0V and -2.5V (Logic level) to allow full switching from the ESP32's 3.3V GPIOs.</li>
-                            </ul>
-                        </li>
-                        <li><strong>Gate Control:</strong> ESP32 Pin GPIO12 controls the MOSFET gate. A High state turns power OFF. A Low state turns power ON.</li>
-                        <li><strong>Quiescent Leakage:</strong> By shutting the P-MOSFET gate off during sleep, the total sensor current leakage is reduced to less than 1µA.</li>
+                        <li><strong>Voltage Divider:</strong> Scaler drops the 5V analog pH signal down to the safe 3.3V range of the ESP32 ADC.</li>
+                        <li><strong>DS18B20 Compensation:</strong> Reads water temperature via 1-Wire (GPIO15) to correct chemical pH drift in real-time.</li>
+                        <li><strong>Power Constraint:</strong> The pH module runs at 5V, meaning when this kit is connected, the node is best operated with a stable external power adapter.</li>
                     </ul>
-                </div>
-
-                <!-- Node Lifecycle -->
-                <div class="card">
-                    <h3>The 3-Second Active Loop Lifecycle</h3>
-                    <p>When the internal RTC timer fires, the node wakes up, runs a rapid sampling routine, transmits, and shuts down. The active phase is optimized to take less than 3 seconds:</p>
-                    
-                    <div class="spec-list">
-                        <div class="spec-item">
-                            <span class="spec-label">1. Boot & Assert Power (10ms):</span>
-                            <span class="spec-val">Wake from sleep. Pull GPIO12 Low to power on sensors via MOSFET.</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">2. Stabilization Delay (500ms):</span>
-                            <span class="spec-val">Wait for Capacitive Probe oscillator & DHT22 internals.</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">3. Analog/Digital Sampling (150ms):</span>
-                            <span class="spec-val">Read ADC (Soil Moisture) and Single-Bus Pulse (DHT22).</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">4. Gate Shutdown (1ms):</span>
-                            <span class="spec-val">Pull GPIO12 High, cutting sensor power. Stops soil electrolysis.</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">5. Payload Framing & TX (150ms):</span>
-                            <span class="spec-val">Pack data into 12-byte struct. Transmit via ESP-NOW.</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">6. ACK Check & Sleep (100ms):</span>
-                            <span class="spec-val">Verify Master response, then invoke `esp_deep_sleep_start()`.</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Egyptian Sensors Sourcing & Details -->
             <div class="card">
-                <h2>Egyptian Agriculture Sourced Sensing Suite</h2>
-                <p style="margin-bottom: 20px;">Designed around sensors that are abundant in the Egyptian electronics market, providing a compromise between cost and reliability.</p>
-                
-                <div class="grid-2">
-                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-green); margin-bottom: 8px;">Capacitive Soil Moisture Sensor v1.2</h4>
-                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;">Measures soil moisture through capacitive change rather than resistance. Resistance sensors rust quickly in Egyptian soil due to salt content. The capacitive probe uses high-frequency capacitance measurement to evaluate soil dielectric constant.</p>
-                        <ul class="custom-list" style="font-size: 0.9rem;">
-                            <li><strong>Local Sourcing:</strong> Available at RAM, Future Electronics, and online makerspaces.</li>
-                            <li><strong>Price:</strong> 90 - 120 EGP.</li>
-                            <li><strong>Calibration Task:</strong> Must map wet soil (approx 1.2V ADC reading) and bone-dry air (approx 3.0V ADC reading) into a linear 0-100% calibration curve stored in ESP32 flash.</li>
-                        </ul>
-                    </div>
-                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-blue); margin-bottom: 8px;">DHT22 (AM2302) Air Temperature & Humidity</h4>
-                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;">A digital sensor that outputs temperature and humidity over a single-wire digital bus. Unlike the cheaper DHT11, the DHT22 can read sub-zero temperatures and humidity levels up to 100%, vital for humid Egyptian greenhouses.</p>
-                        <ul class="custom-list" style="font-size: 0.9rem;">
-                            <li><strong>Local Sourcing:</strong> Extremely common in Cairo electronics markets.</li>
-                            <li><strong>Price:</strong> 150 - 180 EGP.</li>
-                            <li><strong>Implementation Detail:</strong> Reads air variables using a dedicated bit-banging driver or RMT peripheral (ESP32 remote control unit) to precisely capture the 80µs pulse-width signals.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NEW SECTION: SCALABILITY AND MODULAR SENSORS -->
-            <div class="card">
-                <h2>Modular Scaling Paths (Future Enhancements)</h2>
-                <p style="margin-bottom: 20px;">To ensure the PoC remains manageable within the internship timeline, the sensor suite is kept minimal. However, the hardware bus topology is pre-engineered to support easy hot-plug expansions as the project scales:</p>
-                
-                <div class="grid-3">
-                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-gold); margin-bottom: 8px;">1. Ambient Light Expansion</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Add a **BH1750 I2C Light Sensor** (approx. 70 EGP) to measure Lux levels. This allows Syntax-IoT to automate agricultural shade nets and artificial grow lights inside commercial greenhouses.</p>
-                    </div>
-                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-blue); margin-bottom: 8px;">2. Multi-Zone Water Temperature</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Daisy-chain multiple waterproof **DS18B20 1-Wire sensors** (approx. 110 EGP each) on a single ESP32 digital pin to log water temperatures in fish breeding tanks or soil temperature at multiple depths.</p>
-                    </div>
-                    <div style="background: rgba(17, 24, 39, 0.4); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-green); margin-bottom: 8px;">3. Nutrient & Water Level Logging</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Integrate waterproof **AJ-SR04M Ultrasonic sensors** (approx. 180 EGP) for water reservoir level tracking, and analog **pH/EC probes** for aquaculture nutrient dosing automation.</p>
-                    </div>
-                </div>
+                <h2>Integrated Sensing Suite (Egypt Sourced)</h2>
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Sensor Module</th>
+                            <th>What it Senses</th>
+                            <th>Cost (EGP)</th>
+                            <th>Status in Platform</th>
+                            <th>Local Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SHT31-D (I2C)</strong></td>
+                            <td>Ambient Air Temp & Relative Humidity</td>
+                            <td>270 EGP</td>
+                            <td><strong>Required (Base Node)</strong></td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>pH-4502C Kit</strong></td>
+                            <td>Water / Solution Acidity & Alkalinity</td>
+                            <td>850 EGP</td>
+                            <td>Optional Expansion</td>
+                            <td class="available">In Stock (Medium)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DS18B20 Probe</strong></td>
+                            <td>Water Temperature (for pH correction)</td>
+                            <td>110 EGP</td>
+                            <td>Optional (with pH Kit)</td>
+                            <td class="available">In Stock (High)</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1050,24 +1017,24 @@
                             <td class="available">In Stock (High)</td>
                         </tr>
                         <tr>
-                            <td><strong>DHT22 Sensor</strong></td>
-                            <td>AM2302 (Air Temp / Humidity)</td>
-                            <td>160 EGP</td>
-                            <td>Greenhouse / Coop Air Sensing</td>
+                            <td><strong>SHT31-D Sensor</strong></td>
+                            <td>I2C Temperature & Humidity Sensor</td>
+                            <td>270 EGP</td>
+                            <td>Greenhouse / Coop Air Sensing (condense proof)</td>
                             <td class="available">In Stock (High)</td>
                         </tr>
                         <tr>
-                            <td><strong>Capacitive Moisture Sensor</strong></td>
-                            <td>V1.2 Analog Output</td>
-                            <td>90 EGP</td>
-                            <td>Soil moisture checking (corrosion free)</td>
-                            <td class="available">In Stock (High)</td>
+                            <td><strong>pH-4502C Analog Probe Kit</strong></td>
+                            <td>Amplifier board + glass electrode</td>
+                            <td>850 EGP</td>
+                            <td>Optional: Acidity / Alkalinity level checking</td>
+                            <td class="available">In Stock (Medium)</td>
                         </tr>
                         <tr>
                             <td><strong>DS18B20 Temp Probe</strong></td>
                             <td>1-Wire Waterproof Probe</td>
                             <td>110 EGP</td>
-                            <td>Soil/Water depth temperature probe</td>
+                            <td>Optional: pH water temperature compensation probe</td>
                             <td class="available">In Stock (High)</td>
                         </tr>
                         <tr>
@@ -1081,7 +1048,7 @@
                             <td><strong>SIM800L Module</strong></td>
                             <td>GSM/GPRS Board (with antenna)</td>
                             <td>350 EGP</td>
-                            <td>Cellular gateway connection on Master</td>
+                            <td>Cellular GPRS backhaul connection on Master</td>
                             <td class="available">In Stock (Medium)</td>
                         </tr>
                         <tr>
@@ -1118,7 +1085,7 @@
                     <p>Designing this project within the scope of an internship is highly achievable, but demands careful embedded programming. Here is what is immediately feasible:</p>
                     <ul class="custom-list">
                         <li><strong>Firmware Framework:</strong> Developing on ESP-IDF or Arduino IDE with FreeRTOS simplifies multitasking. Using FreeRTOS queues allows clean division between sensor sampling and wireless transmission tasks.</li>
-                        <li><strong>Local Telemetry:</strong> Standard sensors (DHT22, capacitive probe, DS18B20) have well-tested drivers, making initial integration straightforward.</li>
+                        <li><strong>Local Telemetry:</strong> Standard sensors (SHT31-D, pH-4502C, DS18B20) have well-tested drivers, making initial integration straightforward.</li>
                         <li><strong>Offline Buffering:</strong> Writing a circular flash logger using LittleFS on the ESP32's onboard flash is robust and prevents write failures.</li>
                     </ul>
                 </div>
@@ -1168,6 +1135,13 @@
                             <label for="sensor-count">Number of Sensor Nodes:</label>
                             <input type="number" id="sensor-count" value="2" min="1" max="50" onchange="calculateCost()">
                         </div>
+                        
+                        <!-- Checkbox for Optional pH Kit -->
+                        <div class="form-group" style="flex-direction: row; gap: 10px; align-items: center; margin: 10px 0;">
+                            <input type="checkbox" id="add-ph-kit" onchange="calculateCost()" style="width: auto;">
+                            <label for="add-ph-kit" style="cursor: pointer;">Add Optional pH & Temp Compensation Kit (+960 EGP per node)</label>
+                        </div>
+
                         <div class="form-group">
                             <label for="actuator-count">Number of Actuator Nodes:</label>
                             <input type="number" id="actuator-count" value="1" min="1" max="10" onchange="calculateCost()">
@@ -1259,13 +1233,19 @@
         function calculateCost() {
             const sensorsNum = parseInt(document.getElementById('sensor-count').value) || 0;
             const actuatorsNum = parseInt(document.getElementById('actuator-count').value) || 0;
+            const addPhKit = document.getElementById('add-ph-kit').checked;
 
             // Individual node component costs based on local BOM:
             // Master/Gateway: ESP32 (400) + SIM800L (350) + power components (150) = 900 EGP
             const masterCost = 900;
             
-            // Sensor Node: ESP32 (400) + DHT22 (160) + Soil (90) + DS18B20 (110) + Battery (120) + TP4056 (30) + MT3608 (40) = 950 EGP
-            const sensorCost = 950;
+            // Base Sensor Node: ESP32 (400) + SHT31 (270) + Battery (120) + TP4056 (30) + MT3608 (40) = 860 EGP
+            let sensorCost = 860;
+            
+            // If pH kit is selected, add pH Probe (850) + DS18B20 (110) = 960 EGP
+            if (addPhKit) {
+                sensorCost += 960;
+            }
             
             // Actuator Node: ESP32 (400) + 5V Relay (75) + power components (150) = 625 EGP
             const actuatorCost = 625;

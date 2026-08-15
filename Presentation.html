@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation: Modular Smart AgriTech Mesh Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #060c14;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --accent-green: #10b981;
+            --accent-green-hover: #34d399;
+            --accent-blue: #3b82f6;
+            --accent-gold: #f59e0b;
+            --border-color: rgba(75, 85, 99, 0.35);
+            --text-primary: #f3f4f6;
+            --text-secondary: #a3a9b6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            background-image: radial-gradient(circle at 10% 20%, rgba(2, 44, 34, 0.5) 0%, rgba(8, 12, 20, 1) 90%);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* Presentation Container - Centered and Large */
+        .presentation-wrap {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Enlarged Slide Styling */
+        .slide {
+            width: 100%;
+            max-width: 1200px; /* Increased from 960px */
+            min-height: 650px; /* Increased from 520px */
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 60px; /* Increased padding */
+            backdrop-filter: blur(16px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            display: none;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.97) translateY(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Typography Scaling */
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .slide-header {
+            margin-bottom: 30px;
+        }
+
+        .slide-header .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .slide-header h2 {
+            font-size: 2.6rem; /* Scaled up */
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-body {
+            flex-grow: 1;
+            font-size: 1.2rem; /* Scaled up */
+            color: var(--text-secondary);
+        }
+
+        .slide-body p {
+            margin-bottom: 25px;
+            line-height: 1.75;
+        }
+
+        /* Title Slide Custom styling */
+        .title-slide {
+            text-align: center;
+            justify-content: center !important;
+            align-items: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.8rem; /* Scaled up */
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .title-slide p {
+            font-size: 1.45rem; /* Scaled up */
+            max-width: 800px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .meta-info {
+            font-size: 1.1rem; /* Scaled up */
+            color: var(--accent-green);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        /* List & Grid Specs */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px; /* Increased gap */
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ul.list-specs {
+            list-style: none;
+        }
+
+        ul.list-specs li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+        }
+
+        ul.list-specs li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        ul.list-specs.bullet li::before {
+            content: "✦";
+            color: var(--accent-blue);
+        }
+
+        /* Controls Footer */
+        .footer-controls {
+            padding: 25px 50px;
+            background: rgba(17, 24, 39, 0.95);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(75, 85, 99, 0.6);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--accent-green);
+            transform: scale(1.4);
+            box-shadow: 0 0 12px var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-wrap">
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide active title-slide" id="slide-0">
+            <div class="meta-info">Syntax-IoT Internship Proposal</div>
+            <h1>An All-Around Modular AgriTech Platform</h1>
+            <p>A universal, highly expandable offline-first ecosystem providing configurable sensing and stackable control for greenhouses, fish farms, and poultry barns.</p>
+            <div style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 15px;">
+                Use <strong>Left/Right Keyboard Arrows</strong> or on-screen buttons to present.
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE VISION -->
+        <div class="slide" id="slide-1">
+            <div class="slide-header">
+                <span class="badge">01 . Platform Concept</span>
+                <h2>The Vision: All-Around Customizability</h2>
+            </div>
+            <div class="slide-body">
+                <p>Traditional AgriTech hardware is fixed and single-purpose. This platform breaks this constraint by proposing a modular, scalable, and plug-and-play architecture:</p>
+                <div class="grid-layout">
+                    <div>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">1. Configurable Sensing Core</h3>
+                        <p style="font-size: 1rem; line-height: 1.6;">A single sensor board design equipped with breakout channels (I2C, 1-Wire, and Analog ADC). Swap from air climate monitoring (SHT31) to water acidity (pH) or air purity/safety gases (MQ135) without changing the core motherboard.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-blue); margin-bottom: 10px;">2. Stackable Relay Expansion</h3>
+                        <p style="font-size: 1rem; line-height: 1.6;">Actuator nodes scale seamlessly. Start with a single fan relay and expand to 8 stacked relay channels (via I2C expanders) to automate heating, cooling, misting, watering, and feeding loops.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: MASTER GATEWAY -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <span class="badge">02 . Master Node</span>
+                <h2>Gateway Hub (SIM800L GPRS)</h2>
+            </div>
+            <div class="slide-body">
+                <p>The central database bridge that coordinates local node logic and syncs data to the cloud when internet is available.</p>
+                <div class="grid-layout">
+                    <div>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Core Gateway BOM</h3>
+                        <ul class="list-specs">
+                            <li><strong>ESP32 Microcontroller:</strong> Dual-core FreeRTOS coordinator.</li>
+                            <li><strong>SIM800L GPRS:</strong> Dedicated cellular data backhaul.</li>
+                            <li><strong>LM2596 Converter + 1000µF Cap:</strong> Handles GSM power surges.</li>
+                            <li><strong>SSD1306 OLED Screen:</strong> Local network health diagnostics.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Gateway Core Responsibilities</h3>
+                        <ul class="list-specs bullet">
+                            <li><strong>LittleFS Circular Buffer:</strong> Automatically caches sensor streams in local flash when GPRS fails, uploading them chronologically when online.</li>
+                            <li><strong>NTP/Network Time Sync:</strong> Pulls cell time to sync sleeping nodes.</li>
+                            <li><strong>Direct Override Rules Engine:</strong> Coordinates cross-node inputs locally.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: EDITABLE SENSOR NODE -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <span class="badge">03 . Sensor Node Blueprint</span>
+                <h2>Configurable & Editable Sensor Node</h2>
+            </div>
+            <div class="slide-body">
+                <p>The child sensor node is an editable board. It configures automatically based on what sensors are attached:</p>
+                <div class="grid-layout">
+                    <div>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Baseline Setup: Climate (SHT31)</h3>
+                        <ul class="list-specs">
+                            <li><strong>SHT31-D (I2C):</strong> Condensation-proof Temp & Humidity.</li>
+                            <li><strong>P-MOSFET Power Gating:</strong> Completely cuts VCC lines during sleep, dropping node quiescent current to **<15µA** for a 2-year battery life.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-blue); margin-bottom: 10px;">Plug-and-Play Expansion Kits</h3>
+                        <ul class="list-specs bullet">
+                            <li><strong>Water/Soil pH Kit:</strong> Optional pH-4502C analog probe with 10k/20k voltage divider to scale output to the 3.3V ESP32 ADC.</li>
+                            <li><strong>Temperature Compensation:</strong> Optional DS18B20 1-Wire probe to adjust the pH slope for solution temperature changes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: EXPANDABLE ACTUATOR -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <span class="badge">04 . Actuator Node Blueprint</span>
+                <h2>Expandable Multi-Relay Controller</h2>
+            </div>
+            <div class="slide-body">
+                <p>Designed to scale up or down depending on the size of the greenhouse or barn utilities:</p>
+                <div class="grid-layout">
+                    <div>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Stackable Relay Bus</h3>
+                        <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 15px;">By utilizing an I2C GPIO Expander (e.g. **PCF8574**), the node can trigger up to **8 relays** using only 2 pins on the ESP32, keeping GPIO pins free for diagnostics or flow meters.</p>
+                        <ul class="list-specs">
+                            <li><strong>5V Relays:</strong> Optocoupler-isolated (10A @ 250V AC).</li>
+                            <li><strong>Mains Supply:</strong> Board-mounted HLK-PM01 AC-DC module.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Industrial Safety Protection</h3>
+                        <ul class="list-specs bullet">
+                            <li><strong>RC Snubber Circuits:</strong> Wired across AC relay contacts to absorb voltage arcs and prevent electromagnetic interference from hanging the MCU.</li>
+                            <li><strong>Hearbeat Safe-State:</strong> Automatically turns off pumps/valves if the Master heartbeat signal drops.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: PLUG-AND-PLAY MESH -->
+        <div id="slide-5" class="slide">
+            <div class="slide-header">
+                <span class="badge">05 . Network Infrastructure</span>
+                <h2>Self-Describing Mesh Protocol</h2>
+            </div>
+            <div class="slide-body">
+                <p>Because child nodes are editable and custom, the communication framework is designed to adapt dynamically:</p>
+                <div class="grid-layout">
+                    <div>
+                        <h3 style="color: var(--accent-green); margin-bottom: 10px;">Self-Describing Headers</h3>
+                        <p style="font-size: 1rem; line-height: 1.6;">Each child node transmits a structured packet containing a **configuration header byte** (e.g. `0x01` = SHT31 only, `0x03` = SHT31 + pH + Temp). The Master receives this header, decodes it on the fly, and saves the data without requiring firmware changes.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent-blue); margin-bottom: 10px;">Decoupled Local Inter-Comm</h3>
+                        <p style="font-size: 1rem; line-height: 1.6;">Nodes communicate locally without requiring the internet. A sensor node can directly command a neighboring relay node (e.g., "Air humidity is 30% -> turn on misting pump") even if the Master gateway is completely offline.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: CONCLUSION -->
+        <div id="slide-6" class="slide">
+            <div class="slide-header">
+                <span class="badge">06 . Summary</span>
+                <h2>Why this Platform is the Ideal Internship Pitch</h2>
+            </div>
+            <div class="slide-body">
+                <p>This project is designed specifically to showcase high-level engineering skills while remaining entirely feasible using locally sourced Egyptian parts:</p>
+                <div style="background: rgba(16, 185, 129, 0.05); padding: 30px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.25); margin-top: 15px;">
+                    <ul class="list-specs" style="font-size: 1.1rem;">
+                        <li><strong>Advanced Hardware Architecture:</strong> Power-gating MOSFET switches, voltage level shifting, inductive RC snubbers, and stackable I2C relay channels.</li>
+                        <li><strong>Software Depth:</strong> FreeRTOS task coordination, LittleFS offline queue caching, self-describing packet deserialization, and low-level ESP-NOW mesh routing.</li>
+                        <li><strong>Low-Cost Egyptian Prototyping:</strong> Sourced 100% locally from Bab El-Louq/Cairo markets in days.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTROL FOOTER -->
+    <div class="footer-controls">
+        <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)" disabled>Previous</button>
+        <div class="progress-dots" id="dots-wrap"></div>
+        <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)">Next</button>
+    </div>
+
+    <script>
+        const totalSlides = 7;
+        let currentSlide = 0;
+
+        // Generate progress dots
+        const dotsWrap = document.getElementById('dots-wrap');
+        for(let i=0; i<totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.setAttribute('onclick', `goToSlide(${i})`);
+            dotsWrap.appendChild(dot);
+        }
+
+        function updateSlideVisibility() {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            // Show active slide
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+
+            // Update dots
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                if(idx === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = (currentSlide === 0);
+            document.getElementById('next-btn').disabled = (currentSlide === totalSlides - 1);
+        }
+
+        function navigateSlide(direction) {
+            currentSlide += direction;
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlideVisibility();
+        }
+
+        function goToSlide(slideIdx) {
+            currentSlide = slideIdx;
+            updateSlideVisibility();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                navigateSlide(1);
+            } else if (event.key === 'ArrowLeft') {
+                navigateSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
